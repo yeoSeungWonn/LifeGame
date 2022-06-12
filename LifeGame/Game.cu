@@ -85,12 +85,9 @@ __global__ void copy(int* gamefieldOriginal, int* gamefieldBuffer) {
 
 int main()
 {
-	DS_timer timer(5);
+	DS_timer timer(2);
 	timer.setTimerName(0, "CUDA Total");
-	timer.setTimerName(1, "Computation(Kernel)");
-	timer.setTimerName(2, "Data Trans. : Host -> Device");
-	timer.setTimerName(3, "Data Trans. : Device -> Host");
-	timer.setTimerName(4, "VectorSum on Host");
+	timer.setTimerName(1, "CPU Total");
 	timer.initTimers();
 
 	srand(time(NULL));
@@ -143,7 +140,7 @@ int main()
 	timer.offTimer(0);
 
 	count = 0;
-	timer.onTimer(4);
+	timer.onTimer(1);
 	memcpy(gamefieldBufferHost, gamefieldSerialHost, size);
 
 	while (count < term) {
@@ -194,14 +191,14 @@ int main()
 		memcpy(gamefieldSerialHost, gamefieldBufferHost, size);
 		count++;
 	}
-	timer.offTimer(4);
+	timer.offTimer(1);
 	timer.printTimer();
 
 	if (checkMatrix(gamefieldParallelHost, gamefieldSerialHost)) {
-		printf("°°´Ù\n");
+		printf("ê°™ë‹¤\n");
 	}
 	else
-		printf("´Ù¸£´Ù");
+		printf("ë‹¤ë¥´ë‹¤");
 
 	cudaFree(gamefieldParallelCUDA);
 	cudaFree(gamefieldBufferCUDA);
@@ -216,14 +213,14 @@ void initfield(int* _gamefield1, int* _gamefield2)
 
 	for (int i = 0; i < COL; i++)
 	{
-		_gamefield1[i] = NONE; // ¸Ç À§
-		_gamefield1[i + COL * (ROW - 1)] = NONE; // ¸Ç ¾Æ·¡
+		_gamefield1[i] = NONE; // ë§¨ ìœ„
+		_gamefield1[i + COL * (ROW - 1)] = NONE; // ë§¨ ì•„ëž˜
 	}
 
 	for (int i = 0; i < ROW; i++)
 	{
-		_gamefield1[COL * i] = NONE; // ¸Ç ¿ÞÂÊ
-		_gamefield1[COL * (i + 1) - 1] = NONE; // ¸Ç ¿À¸¥ÂÊ
+		_gamefield1[COL * i] = NONE; // ë§¨ ì™¼ìª½
+		_gamefield1[COL * (i + 1) - 1] = NONE; // ë§¨ ì˜¤ë¥¸ìª½
 	}
 
 	for (int i = 0; i < ROW * COL; i++) {
