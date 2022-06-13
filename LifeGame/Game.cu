@@ -202,6 +202,8 @@ int main()
 
 	cudaFree(gamefieldParallelCUDA);
 	cudaFree(gamefieldBufferCUDA);
+	
+	delete[] gamefieldParallelHost; delete[] gamefieldSerialHost; delete[] gamefieldBufferHost;
 
 	return 0;
 }
